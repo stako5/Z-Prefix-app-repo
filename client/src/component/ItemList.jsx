@@ -1,9 +1,21 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { APIContext } from "./Context.jsx";
 
-function ItemList() {
-  const { userList } = useContext(APIContext);
+function ItemList({ item, quantities }) {
+  const [userList, setUserList] = useState([]);
+
+  useEffect(() => {
+    const newItems = item.map((i) => ({
+      item_id: i.item_id,
+      user_id: i.user_id,
+      item_name: i.item_name,
+      description: i.description,
+      quantity: quantities[i.item_id - 1],
+    }));
+    setUserList(newItems);
+  }, [item, quantities]);
+
+  console.log(userList);
 
   return (
     <>

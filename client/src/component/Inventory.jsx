@@ -1,49 +1,51 @@
 import { useContext, useEffect, useState } from "react";
 import { APIContext } from "./Context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import ItemList from "./ItemList";
 
 function Inventory() {
-  const { data, quantities, setQuantities, user, addToList } =
-    useContext(APIContext);
+  const { data, setData, quantities, setQuantities } = useContext(APIContext);
+  const navigate = useNavigate();
 
   if (!data) return <div>Loading...</div>;
 
   const [listItem, setListItem] = useState([]);
 
   useEffect(() => {
-    if (data && quantities.length !== data.length) {
+    if (data) {
       setQuantities(data.map((d) => Number(d.quantity)));
     }
   }, [data]);
 
-  function handleQuantities() {
-    data.forEach((d, i) => {
-      fetch(`http://localhost:8000/items/${d.item_id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity: quantities[i] }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Data submitted", data);
-        });
-    });
+  function handleUpdate(item, newQuantity) {
+    fetch(`http://localhost:8000/items/${item.item_id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: newQuantity }),
+    })
+      .then((res) => res.json())
+      .then((update) => {
+        setData((arr) =>
+          arr.map((d) =>
+            d.item_id === item.item_id ? { ...d, quantity: update.quantity } : d
+          )
+        );
+      });
   }
 
   function handleAdd(i) {
     const add = quantities.slice();
     add[i] = add[i] + 1;
     setQuantities(add);
-    handleQuantities(data[i].item_id, add[i]);
+    handleUpdate(data[i], add[i]);
   }
 
   function handleSubtract(i) {
     const sub = quantities.slice();
     if (sub[i] > 0) sub[i] = sub[i] - 1;
     setQuantities(sub);
-    handleQuantities(data[i].item_id, add[i]);
+    handleUpdate(data[i], sub[i]);
   }
 
   function handleListItem(newItem) {
@@ -55,12 +57,24 @@ function Inventory() {
     });
   }
 
-  console.log(quantities);
+  function handleDelete(item) {
+    fetch(`http://localhost:8000/items/${item.item_id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) {
+        setData((arr) => arr.filter((d) => d.item_id !== item.item_id));
+      }
+      console.log({ deleted: item.item_name });
+    });
+  }
 
   return (
     <>
       <div className="body">
         <div className="container">
+          <button onClick={() => navigate("/items/newItem")} className="btn">
+            ADD
+          </button>
           <ul className="item-list">
             {data.map((d, i) => (
               <li key={d.item_id} className="item-card">
@@ -74,6 +88,7 @@ function Inventory() {
                 <button onClick={() => handleAdd(i)}>+</button>
                 <button onClick={() => handleSubtract(i)}>-</button>
                 <button onClick={() => handleListItem(d)}>ADD to list</button>
+                <button onClick={() => handleDelete(d)}>Delete</button>
               </li>
             ))}
           </ul>

@@ -1,27 +1,49 @@
 import { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { APIContext } from "./Context";
 
 function ItemDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { quantities } = useContext(APIContext);
+
   const [item, setItem] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8000/items/${id}`)
       .then((res) => res.json())
-      .then((d) => setItem(d));
+      .then((data) => {
+        console.log(data);
+        const details = {
+          item_name: data.item_name,
+          description: data.description,
+          quantity: quantities[data.item_id - 1],
+        };
+        setItem(details);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
+  console.log(item);
+
+  if (!item) return <div>Loading....</div>;
+
+  console.log(item);
   return (
     <>
-      <ul>
-        {item.map((i) => (
-          <li>
-            <label>Item: {item_name}</label>
-            <p>Discription: {i.description}</p>
-            <h4>Quantity: {i.quantity}</h4>
-          </li>
-        ))}
-      </ul>
+      <header>
+        <h1>Inventory Manager</h1>
+        <nav>
+          <button onClick={() => navigate("/")} className="btn">
+            Home
+          </button>
+        </nav>
+      </header>
+      <main>
+        <label>Item: {item.item_name}</label>
+        <p>Discription: {item.description}</p>
+        <h4>Quantity: {item.quantity}</h4>
+      </main>
     </>
   );
 }
