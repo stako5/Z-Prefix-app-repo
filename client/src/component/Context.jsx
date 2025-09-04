@@ -14,16 +14,14 @@ function APIProvider({ children }) {
     return JSON.parse(raw);
   }
 
+  function reFetch() {
+    fetch(url)
+      .then((res) => res.json())
+      .then((d) => setData(d));
+  }
+
   useEffect(() => {
-    if (user) {
-      fetch(url)
-        .then((res) => res.json())
-        .then((d) => setData(d));
-    } else {
-      fetch(url)
-        .then((res) => res.json())
-        .then((d) => setData(d));
-    }
+    reFetch();
   }, [user]);
 
   return (
@@ -36,6 +34,7 @@ function APIProvider({ children }) {
         user,
         setUser,
         loggedUser,
+        reFetch,
       }}
     >
       {children}

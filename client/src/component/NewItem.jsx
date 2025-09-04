@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { APIContext } from "./Context";
 
 function NewItem() {
   const navigate = useNavigate();
+  const { reFetch } = useContext(APIContext);
 
   async function handleNewItem(event) {
     event.preventDefault();
@@ -9,7 +12,7 @@ function NewItem() {
     const item = {
       item_name: form.item.value,
       description: form.description.value,
-      quantity: form.quantity.value,
+      quantity: Number(form.quantity.value) || 0,
     };
 
     await fetch(`http://localhost:8000/items`, {
@@ -20,11 +23,10 @@ function NewItem() {
       body: JSON.stringify(item),
     })
       .then((res) => {
-        if (res.ok) {
-          console.log({ created: "New Item" });
-          navigate("/");
-        }
+        res.json();
+        reFetch();
       })
+      .then(navigate("/"))
       .catch((err) => console.error("failed", err));
   }
 

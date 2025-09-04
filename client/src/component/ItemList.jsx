@@ -15,8 +15,6 @@ function ItemList({ item, quantities }) {
     setUserList(newItems);
   }, [item, quantities]);
 
-  console.log(userList);
-
   return (
     <>
       <h1>Items list</h1>
