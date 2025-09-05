@@ -13,7 +13,7 @@ function APIProvider({ children }) {
     const raw = localStorage.getItem("user");
     return JSON.parse(raw);
   }
-
+  //Update context with UTils for api.js so data can be reuse better and less reduntances/CRUD render issues.
   function reFetch() {
     fetch(url)
       .then((res) => res.json())

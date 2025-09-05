@@ -9,6 +9,7 @@ function Login() {
   const navigate = useNavigate();
   const { setUser } = useContext(APIContext);
 
+  // matches the password and the username from db to then save to localstorage for the app.jsx header so USER displays. add BCRYPT
   const submit = async (event) => {
     event.preventDefault();
     const res = await fetch(`http://localhost:8000/login`, {

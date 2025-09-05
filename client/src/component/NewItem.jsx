@@ -6,6 +6,7 @@ function NewItem() {
   const navigate = useNavigate();
   const { reFetch } = useContext(APIContext);
 
+  //Creates new Item.  Need to find out how to create a UTIL function to process data then return it to the db for updates
   async function handleNewItem(event) {
     event.preventDefault();
     const form = event.target;

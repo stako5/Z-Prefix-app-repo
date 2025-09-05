@@ -18,6 +18,7 @@ function Inventory() {
     }
   }, [data]);
 
+  //Use something like this put and send it data to Detail through a Util for all CRUD
   function handleUpdate(item, newQuantity) {
     fetch(`http://localhost:8000/items/${item.item_id}`, {
       method: "PUT",

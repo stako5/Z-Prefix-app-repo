@@ -3,7 +3,7 @@
  * @returns { Promise<void> } 
  */
 exports.seed = async function(knex) {
-  // Deletes ALL existing entries
+
   await knex('items').del()
   await knex('items').insert([
     { item_name: 'Cordless Drill', description: ' durable, shop-grade hardware for professional and DIY use', quantity: '0'},

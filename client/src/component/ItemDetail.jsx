@@ -9,6 +9,7 @@ function ItemDetail() {
 
   const [item, setItem] = useState([]);
 
+  // need to find a better way to match the quantities from intentory.jsx to the param fetch. Create Utils function to trigger comparisons of quantites[index] to data.item_id
   useEffect(() => {
     fetch(`http://localhost:8000/items/${id}`)
       .then((res) => res.json())

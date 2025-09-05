@@ -7,6 +7,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  // Sent the form in JSON to the backend server for the db. Need to work on BCRYPT
   async function handleSubmit(event) {
     event.preventDefault();
     const res = await fetch("http://localhost:8000/signup", {

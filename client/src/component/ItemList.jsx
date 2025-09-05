@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 function ItemList({ item, quantities }) {
   const [userList, setUserList] = useState([]);
 
+  //combines the change quantities when action to the defualt data. Need to refactor to the UTIL functions
   useEffect(() => {
     const newItems = item.map((i) => ({
       item_id: i.item_id,
